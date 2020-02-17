@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: estore-infra
+  labels:
+    app.k8s.io/name: estore
+    app.k8s.io/component: namespace
+    app.k8s.io/part-of: infra
+    app.k8s.io/managed-by: ci
+    app.k8s.io/version: v1.0.0

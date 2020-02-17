@@ -1,0 +1,6 @@
+
+## Webhooks
+
+https://banzaicloud.com/blog/k8s-admission-webhooks/
+
+https://kubernetes.io/blog/2019/03/21/a-guide-to-kubernetes-admission-controllers/

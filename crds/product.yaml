@@ -1,0 +1,92 @@
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: products.estore.com
+  labels:
+    app.k8s.io/name: estore
+    app.k8s.io/component: crd
+    app.k8s.io/part-of: infra
+    app.k8s.io/managed-by: ci
+    app.k8s.io/version: v1.0.0
+    app.k8s.io/resource: product
+spec:
+  group: estore.com
+  version: v1
+  scope: Namespaced
+  names:
+    kind: Product
+    plural: products
+    singular: product
+    shortNames:
+      - pdt
+  validation:
+    openAPIV3Schema:
+      type: object
+      required:
+        - spec
+      properties:
+        spec:
+          type: object
+          required:
+            - displayName
+            - description
+          properties:
+            displayName:
+              description: product display name
+              type: string
+              minLength: 3
+              maxLength: 100
+            description:
+              description: product description
+              type: string
+              maxLength: 500
+            brand:
+              description: product brand
+              type: string
+              minLength: 1
+              maxLength: 20
+            price:
+              description: product price
+              type: number
+              format: float
+              minimum: 0
+            categories:
+              description: product categories
+              type: array
+              items:
+                type: string
+                enum:
+                  - cellphones
+                  - tv
+                  - videogames
+                  - health
+        status:
+          type: object
+          properties:
+            currentStatus:
+              type: object
+              properties:
+                phase:
+                  type: string
+                  description: Pending, Creating, Updating, Available, Deleting, Unknown, Failed
+                timeoutActive:
+                  type: string
+                  description: timeout active
+                lastUpdateTime:
+                  type: string
+                  description: last updated timestamp
+            lastOperation:
+              type: object
+              properties:
+                description:
+                  type: string
+                  description: description of the last operation
+                lastUpdateTime:
+                  type: string
+                  description: last operation update time stamp
+                state:
+                  type: string
+                  description: Processing, Failed, Successful
+                type:
+                  type: string
+                  description: Create, Update, Delete

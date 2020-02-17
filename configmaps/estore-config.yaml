@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: estore-config
+  namespace: estore-infra
+  labels:
+    app.k8s.io/name: estore
+    app.k8s.io/component: config
+    app.k8s.io/part-of: infra
+    app.k8s.io/managed-by: ci
+    app.k8s.io/version: v1.0.0
+data:
+  CLUSTER_NAME: "NoNameCluster"
+  KUBECONFIG: ""
+
+  LOG_LEVEL: "debug"
+
+  # app freeze configs
+  FREEZE_START_TIME: ""
+  FREEZE_END_TIME: ""
+  FREEZE_COMPONENTS: ""
+  FREEZE_MESSAGE: ""
+
+  # white lists
+  WHITELIST_NAMESPACES: ""
+

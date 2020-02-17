@@ -1,0 +1,12 @@
+---
+apiVersion: estore.com/v1
+kind: Product
+metadata:
+  name: examples-product-1
+spec:
+  displayName: SampleProduct1
+  description: examples description
+  brand: examples-brand
+  categories:
+    - cellphones
+  price: 100

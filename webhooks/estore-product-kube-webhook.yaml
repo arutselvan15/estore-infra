@@ -1,0 +1,122 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: estore-product-kube-webhook
+  labels:
+    app.k8s.io/name: estore
+    app.k8s.io/component: webhook
+    app.k8s.io/part-of: infra
+    app.k8s.io/managed-by: ci
+    app.k8s.io/version: v1.0.0
+    app.k8s.io/resource: product
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.k8s.io/name: estore
+      app.k8s.io/component: webhook
+      app.k8s.io/resource: product
+  template:
+    metadata:
+      labels:
+        app.k8s.io/name: estore
+        app.k8s.io/component: webhook
+        app.k8s.io/resource: product
+    spec:
+      serviceAccount: estore-sa
+      containers:
+        - name: estore-product-kube-webhook
+          image: arutselvan15/estore-product-kube-webhook:v1.0.0-linux
+          ports:
+            - containerPort: 8000
+          imagePullPolicy: Never
+          envFrom:
+            - configMapRef:
+                name: estore-config
+          volumeMounts:
+            - name: app-volume
+              mountPath: /app
+            - name: webhook-certs
+              mountPath: /etc/webhook/certs
+              readOnly: true
+      volumes:
+        - name: app-volume
+          emptyDir: {}
+        - name: webhook-certs
+          secret:
+            defaultMode: 420
+            secretName: estore-product-kube-webhook-certs
+      imagePullSecrets:
+        - name: arutselvan15-pull-creds
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: estore-product-kube-webhook-service
+  labels:
+    app.k8s.io/name: estore
+    app.k8s.io/component: service
+    app.k8s.io/resource: product
+    app.k8s.io/part-of: infra
+    app.k8s.io/managed-by: ci
+    app.k8s.io/version: v1.0.0
+spec:
+  selector:
+    app.k8s.io/name: estore
+    app.k8s.io/component: webhook
+    app.k8s.io/resource: product
+  ports:
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 8000
+---
+kind: ValidatingWebhookConfiguration
+apiVersion: admissionregistration.k8s.io/v1beta1
+metadata:
+  name: estore-product-kube-validate-webhook-cfg
+  labels:
+    app.k8s.io/name: estore
+    app.k8s.io/component: validatingwebhook
+    app.k8s.io/resource: product
+    app.k8s.io/part-of: infra
+    app.k8s.io/managed-by: ci
+    app.k8s.io/version: v1.0.0
+webhooks:
+  - name: product-validating-webhook.estore.k8s.io
+    clientConfig:
+      caBundle: __CA_BUNDLE_B64__
+      service:
+        namespace: estore-infra
+        name: estore-product-kube-webhook-service
+        path: /validate
+    rules:
+      - operations: ["CREATE","UPDATE","DELETE"]
+        apiGroups: ["estore.com"]
+        apiVersions: ["v1"]
+        resources: ["products"]
+---
+kind: MutatingWebhookConfiguration
+apiVersion: admissionregistration.k8s.io/v1beta1
+metadata:
+  name: estore-product-kube-mutate-webhook-cfg
+  labels:
+    app.k8s.io/name: estore
+    app.k8s.io/component: mutatingwebhook
+    app.k8s.io/resource: product
+    app.k8s.io/part-of: infra
+    app.k8s.io/managed-by: ci
+    app.k8s.io/version: v1.0.0
+webhooks:
+  - name: product-mutating-webhook.estore.k8s.io
+    clientConfig:
+      caBundle: __CA_BUNDLE_B64__
+      service:
+        namespace: estore-infra
+        name: estore-product-kube-webhook-service
+        path: /mutate
+    rules:
+      - operations: ["CREATE","UPDATE","DELETE"]
+        apiGroups: ["estore.com"]
+        apiVersions: ["v1"]
+        resources: ["products"]

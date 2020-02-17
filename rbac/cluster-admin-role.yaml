@@ -1,0 +1,53 @@
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cluster-admin-role
+  labels:
+    app.k8s.io/name: cluster
+    app.k8s.io/component: clusterrole
+    app.k8s.io/part-of: infra
+    app.k8s.io/managed-by: ci
+    app.k8s.io/version: v1.0.0
+rules:
+    # namespaces, configmaps, secrets, services
+    # resourcequotas, quotas, limitranges, events
+    # users, groups, serviceaccounts
+  - apiGroups: [""]
+    resources: ["*"]
+    verbs: ["*"]
+    # rbac
+  - apiGroups: ["rbac.authorization.k8s.io"]
+    resources: ["*"]
+    verbs: ["*"]
+    # custom resource extensions
+  - apiGroups: ["apiextensions.k8s.io"]
+    resources: ["customresourcedefinitions"]
+    verbs: ["get", "watch", "list", "create", "update", "patch", "delete"]
+    # webhooks
+  - apiGroups: ["admissionregistration.k8s.io"]
+    resources: ["validatingwebhookconfigurations", "mutatingwebhookconfigurations"]
+    verbs: ["get", "watch", "list", "create", "update", "patch", "delete"]
+    # custom resource estore
+  - apiGroups: ["estore.com"]
+    resources: ["*"]
+    verbs: ["get", "watch", "list", "create", "update", "patch", "delete"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cluster-admin-role-binding
+  labels:
+    app.k8s.io/name: cluster
+    app.k8s.io/component: clusterrolebinding
+    app.k8s.io/part-of: infra
+    app.k8s.io/managed-by: ci
+    app.k8s.io/version: v1.0.0
+roleRef:
+  kind: ClusterRole
+  apiGroup: rbac.authorization.k8s.io
+  name: cluster-admin-role
+subjects:
+  - kind: ServiceAccount
+    name: estore-deploy-sa
+    namespace: estore-infra

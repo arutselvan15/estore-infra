@@ -1,0 +1,38 @@
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: estore-admin-role
+  labels:
+    app.k8s.io/name: estore
+    app.k8s.io/component: clusterrole
+    app.k8s.io/part-of: infra
+    app.k8s.io/managed-by: ci
+    app.k8s.io/version: v1.0.0
+rules:
+  - apiGroups: [""]
+    resources: ["namespaces"]
+    verbs: ["get", "watch", "list", "create", "update", "patch", "delete"]
+  - apiGroups: ["estore.com"]
+    resources: ["*"]
+    verbs: ["get", "watch", "list", "create", "update", "patch", "delete"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: estore-admin-role-binding
+  labels:
+    app.k8s.io/name: estore
+    app.k8s.io/component: clusterrolebinding
+    app.k8s.io/part-of: infra
+    app.k8s.io/managed-by: ci
+    app.k8s.io/version: v1.0.0
+roleRef:
+  kind: ClusterRole
+  apiGroup: rbac.authorization.k8s.io
+  name: estore-admin-role
+subjects:
+  - kind: ServiceAccount
+    name: estore-sa
+    namespace: estore-infra
+
