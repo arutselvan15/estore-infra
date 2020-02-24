@@ -11,7 +11,7 @@ metadata:
     app.k8s.io/version: v1.0.0
 rules:
   - apiGroups: [""]
-    resources: ["namespaces"]
+    resources: ["namespaces", "events"]
     verbs: ["get", "watch", "list", "create", "update", "patch", "delete"]
   - apiGroups: ["estore.com"]
     resources: ["*"]

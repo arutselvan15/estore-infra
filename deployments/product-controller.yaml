@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: estore-product-kube-controller
+  labels:
+    app.k8s.io/name: estore
+    app.k8s.io/component: controller
+    app.k8s.io/part-of: infra
+    app.k8s.io/managed-by: ci
+    app.k8s.io/version: v1.0.0
+    app.k8s.io/resource: product
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.k8s.io/name: estore
+      app.k8s.io/component: controller
+      app.k8s.io/resource: product
+  template:
+    metadata:
+      labels:
+        app.k8s.io/name: estore
+        app.k8s.io/component: controller
+        app.k8s.io/resource: product
+    spec:
+      serviceAccount: estore-sa
+      containers:
+        - name: estore-product-kube-controller
+          image: arutselvan15/estore-product-kube-controller:v1.0.0-linux
+          imagePullPolicy: Never
+          envFrom:
+            - configMapRef:
+                name: estore-config
+          volumeMounts:
+            - name: app-volume
+              mountPath: /app
+      volumes:
+        - name: app-volume
+          emptyDir: {}
+      imagePullSecrets:
+        - name: arutselvan15-pull-creds

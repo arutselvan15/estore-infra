@@ -1,4 +1,4 @@
-GO=GOOS=linux GOARCH=amd64 GO111MODULE=on go
+GO=GO111MODULE=on go
 BINARY=bin/estore-infra
 MAIN_GO=cmd/main.go
 
@@ -33,4 +33,4 @@ test: clean
 
 build: test
 	@echo "==> Building..."
-	CGO_ENABLED=0 ${GO} build -o ${BINARY} ${MAIN_GO}
+	${GO_CROSS_CMPL} CGO_ENABLED=0 ${GO} build -o ${BINARY} ${MAIN_GO}

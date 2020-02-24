@@ -13,7 +13,7 @@ data:
   CLUSTER_NAME: "NoNameCluster"
   KUBECONFIG: ""
 
-  LOG_LEVEL: "debug"
+  APP_NAME: "estore"
 
   # app freeze configs
   FREEZE_START_TIME: ""
@@ -21,6 +21,22 @@ data:
   FREEZE_COMPONENTS: ""
   FREEZE_MESSAGE: ""
 
-  # white lists
-  WHITELIST_NAMESPACES: ""
+  # exact match or prefix
+  SYSTEM_NAMESPACES: "default,kube"
+  SYSTEM_USERS: "system:serviceaccount:kube"
+  BLACKLIST_NAMESPACES: ""
+  BLACKLIST_USERS: ""
+
+  LOG_LEVEL: "debug"
+  LOG_FORMAT: "text"
+  LOG_FILE_ENABLED: "false"
+  LOG_FILE_FORMAT: "json"
+  LOG_FILE_DIR: "/app"
+  LOG_FILE_NAME: "estore.log"
+  # size in MB
+  LOG_FILE_SIZE: "10"
+  LOG_FILE_AGE: "1"
+  LOG_FILE_BACKUP: "2"
+
+
 

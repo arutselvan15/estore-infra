@@ -26,7 +26,7 @@ spec:
       serviceAccount: estore-sa
       containers:
         - name: estore-product-kube-webhook
-          image: arutselvan15/estore-product-kube-webhook:v1.0.0-linux
+          image: arutselvan15/estore-product-kube-webhook:v1.0.7-linux
           ports:
             - containerPort: 8000
           imagePullPolicy: Never
@@ -83,7 +83,8 @@ metadata:
     app.k8s.io/managed-by: ci
     app.k8s.io/version: v1.0.0
 webhooks:
-  - name: product-validating-webhook.estore.k8s.io
+  # webhook name must end with domain
+  - name: product-validating-webhook.estore.com
     clientConfig:
       caBundle: __CA_BUNDLE_B64__
       service:
@@ -108,7 +109,8 @@ metadata:
     app.k8s.io/managed-by: ci
     app.k8s.io/version: v1.0.0
 webhooks:
-  - name: product-mutating-webhook.estore.k8s.io
+  # webhook name must end with domain
+  - name: product-mutating-webhook.estore.com
     clientConfig:
       caBundle: __CA_BUNDLE_B64__
       service:

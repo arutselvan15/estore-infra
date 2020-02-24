@@ -2,11 +2,11 @@
 apiVersion: estore.com/v1
 kind: Product
 metadata:
-  name: examples-product-1
+  name: sample-2
 spec:
   displayName: SampleProduct1
   description: examples description
-  brand: examples-brand
+  brand: phone
   categories:
     - cellphones
   price: 100
